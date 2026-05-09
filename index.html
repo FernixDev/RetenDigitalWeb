@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ReténDigital — Del Campo, Para el Campo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,800;0,9..144,900;1,9..144,400&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --brasa: #E04E1B;        /* naranja brasa */
+  --brasa-claro: #FF7A3D;
+  --pino: #1F3A2D;         /* verde pino oscuro */
+  --pino-claro: #2E5841;
+  --crudo: #F4EFE6;        /* papel crudo */
+  --crudo-oscuro: #E8DFCC;
+  --tinta: #14110D;        /* tinta casi negra */
+  --niebla: #B8AC95;       /* gris ahumado */
+  --alerta: #FFB700;       /* amarillo señal */
+  --sangre: #8B1F0F;       /* rojo profundo */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--crudo);
+  color: var(--tinta);
+  font-family: 'Fraunces', serif;
+  font-size: 17px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  font-feature-settings: "ss01", "ss02";
+}
+
+/* Noise texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+  pointer-events: none;
+  opacity: 0.06;
+  mix-blend-mode: multiply;
+  z-index: 1;
+}
+
+/* ================= TIPOGRAFÍA ================= */
+.display {
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 0.02em;
+  line-height: 0.92;
+  font-weight: 400;
+}
+
+.mono {
+  font-family: 'JetBrains Mono', monospace;
+  font-feature-settings: "calt" 0;
+}
+
+/* ================= NAVEGACIÓN ================= */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 18px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(244, 239, 230, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(31, 58, 45, 0.12);
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-logo {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+.nav-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 0.08em;
+  color: var(--tinta);
+}
+
+.nav-name .accent {
+  color: var(--brasa);
+}
+
+.nav-links {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--tinta);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-weight: 500;
+  position: relative;
+  padding: 4px 0;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--brasa);
+  transition: width 0.3s ease;
+}
+
+.nav-links a:hover::after { width: 100%; }
+
+.nav-cta {
+  background: var(--tinta);
+  color: var(--crudo);
+  padding: 10px 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s;
+}
+
+.nav-cta:hover {
+  background: var(--brasa);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav { padding: 14px 20px; }
+}
+
+/* ================= HERO ================= */
+.hero {
+  min-height: 100vh;
+  position: relative;
+  padding: 140px 32px 80px;
+  display: grid;
+  grid-template-columns: 1fr;
+  overflow: hidden;
+  background: var(--crudo);
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 60%;
+  height: 100%;
+  background: radial-gradient(ellipse at top right, rgba(224, 78, 27, 0.18), transparent 60%);
+  pointer-events: none;
+}
+
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(31,58,45,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(31,58,45,0.04) 1px, transparent 1px);
+  background-size: 80px 80px;
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  z-index: 2;
+}
+
+.hero-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--pino);
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.2s forwards;
+}
+
+.hero-meta .dot {
+  width: 8px;
+  height: 8px;
+  background: var(--brasa);
+  border-radius: 50%;
+  animation: pulse 2s ease infinite;
+}
+
+.hero-meta .dash {
+  width: 40px;
+  height: 1px;
+  background: var(--tinta);
+  opacity: 0.3;
+}
+
+.hero-title {
+  font-family: 'Fraunces', serif;
+  font-weight: 900;
+  font-size: clamp(58px, 11vw, 180px);
+  line-height: 0.88;
+  letter-spacing: -0.025em;
+  color: var(--tinta);
+  margin-bottom: 32px;
+  opacity: 0;
+  animation: fadeUp 1s ease 0.4s forwards;
+}
+
+.hero-title .word {
+  display: inline-block;
+}
+
+.hero-title .italic {
+  font-style: italic;
+  font-weight: 600;
+  color: var(--brasa);
+}
+
+.hero-title .stamp {
+  display: inline-block;
+  position: relative;
+}
+
+.hero-title .stamp::after {
+  content: '';
+  position: absolute;
+  inset: -8px -16px;
+  border: 3px solid var(--brasa);
+  transform: rotate(-2deg);
+  pointer-events: none;
+}
+
+.hero-subtitle {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: clamp(20px, 2.4vw, 28px);
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--pino);
+  max-width: 720px;
+  margin-bottom: 56px;
+  opacity: 0;
+  animation: fadeUp 1s ease 0.6s forwards;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: fadeUp 1s ease 0.8s forwards;
+}
+
+.btn-primary {
+  background: var(--tinta);
+  color: var(--crudo);
+  padding: 18px 32px;
+  border: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--brasa);
+  transform: translateX(-101%);
+  transition: transform 0.4s ease;
+}
+
+.btn-primary:hover::before { transform: translateX(0); }
+.btn-primary span { position: relative; z-index: 1; }
+
+.btn-secondary {
+  background: transparent;
+  color: var(--tinta);
+  padding: 18px 32px;
+  border: 1.5px solid var(--tinta);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: var(--tinta);
+  color: var(--crudo);
+}
+
+/* Hero stats strip */
+.hero-stats {
+  position: absolute;
+  bottom: 40px;
+  left: 32px;
+  right: 32px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(20, 17, 13, 0.15);
+  z-index: 2;
+  max-width: 1400px;
+  margin: 0 auto;
+  opacity: 0;
+  animation: fadeUp 1s ease 1s forwards;
+}
+
+.hero-stat .num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(36px, 5vw, 64px);
+  color: var(--brasa);
+  line-height: 0.9;
+  display: block;
+}
+
+.hero-stat .label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--tinta);
+  opacity: 0.6;
+  margin-top: 6px;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .hero-stats { grid-template-columns: repeat(2, 1fr); position: static; margin-top: 60px; }
+  .hero { padding: 110px 20px 40px; }
+}
+
+/* ================= ANIMACIONES ================= */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.6; }
+}
+
+@keyframes slowSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ================= SECCIÓN: PROBLEMA ================= */
+.section {
+  padding: 120px 32px;
+  position: relative;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 64px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+}
+
+.section-header .num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1.5px solid var(--brasa);
+  color: var(--brasa);
+  border-radius: 50%;
+  font-weight: 700;
+}
+
+.section-header .label {
+  color: var(--pino);
+  font-weight: 500;
+}
+
+.section-header .line {
+  flex: 1;
+  height: 1px;
+  background: rgba(20,17,13,0.15);
+}
+
+.problema-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: stretch;
+}
+
+.problema-col {
+  padding: 48px 40px;
+  position: relative;
+}
+
+.problema-col.antes {
+  background: var(--tinta);
+  color: var(--crudo);
+}
+
+.problema-col.despues {
+  background: var(--brasa);
+  color: var(--crudo);
+}
+
+.problema-col h3 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 56px;
+  letter-spacing: 0.04em;
+  margin-bottom: 32px;
+  line-height: 1;
+}
+
+.problema-col h3 .small {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-weight: 400;
+  margin-bottom: 8px;
+  opacity: 0.7;
+}
+
+.problema-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.problema-list li {
+  display: flex;
+  gap: 16px;
+  font-size: 17px;
+  line-height: 1.5;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(244, 239, 230, 0.15);
+}
+
+.problema-list li:last-child { border-bottom: none; }
+
+.problema-list .icon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  margin-top: 2px;
+}
+
+@media (max-width: 768px) {
+  .problema-grid { grid-template-columns: 1fr; gap: 24px; }
+  .section { padding: 80px 20px; }
+}
+
+/* ================= SECCIÓN: TECNOLOGÍAS ================= */
+.section-tech {
+  background: var(--tinta);
+  color: var(--crudo);
+  padding: 120px 32px;
+  margin: 0;
+  max-width: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.section-tech::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(224,78,27,0.15), transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(31,58,45,0.4), transparent 50%);
+}
+
+.section-tech-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.section-tech .section-header .label { color: var(--niebla); }
+.section-tech .section-header .line { background: rgba(244,239,230,0.15); }
+
+.tech-title {
+  font-family: 'Fraunces', serif;
+  font-weight: 900;
+  font-size: clamp(48px, 7vw, 96px);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+}
+
+.tech-title .italic {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--brasa-claro);
+}
+
+.tech-intro {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 21px;
+  max-width: 720px;
+  color: var(--niebla);
+  margin-bottom: 80px;
+  line-height: 1.5;
+}
+
+.tech-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px;
+  background: rgba(244,239,230,0.1);
+  border: 1px solid rgba(244,239,230,0.1);
+}
+
+.tech-card {
+  background: var(--tinta);
+  padding: 48px 40px;
+  position: relative;
+  transition: all 0.4s ease;
+  cursor: pointer;
+  overflow: hidden;
+  min-height: 360px;
+  display: flex;
+  flex-direction: column;
+}
+
+.tech-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(224,78,27,0.1), transparent);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.tech-card:hover::before { opacity: 1; }
+.tech-card:hover { transform: translateY(-2px); }
+
+.tech-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+  position: relative;
+}
+
+.tech-icon {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(244,239,230,0.05);
+  border: 1px solid rgba(244,239,230,0.15);
+  border-radius: 12px;
+  transition: all 0.3s;
+}
+
+.tech-card:hover .tech-icon {
+  background: var(--brasa);
+  border-color: var(--brasa);
+  transform: rotate(-6deg) scale(1.05);
+}
+
+.tech-icon svg { width: 32px; height: 32px; }
+
+.tech-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--niebla);
+  opacity: 0.5;
+}
+
+.tech-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 48px;
+  letter-spacing: 0.03em;
+  margin-bottom: 8px;
+  line-height: 1;
+  color: var(--crudo);
+}
+
+.tech-tagline {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--brasa-claro);
+  margin-bottom: 24px;
+}
+
+.tech-desc {
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--niebla);
+  position: relative;
+  z-index: 1;
+}
+
+.tech-meta {
+  margin-top: auto;
+  padding-top: 28px;
+  border-top: 1px solid rgba(244,239,230,0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--niebla);
+  opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+  .tech-grid { grid-template-columns: 1fr; }
+  .tech-card { padding: 36px 28px; min-height: auto; }
+  .tech-name { font-size: 38px; }
+}
+
+/* ================= SECCIÓN: ARQUITECTURA ================= */
+.arch-wrap {
+  background: var(--crudo);
+  padding: 120px 32px;
+}
+
+.arch-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.arch-title {
+  font-family: 'Fraunces', serif;
+  font-weight: 900;
+  font-size: clamp(48px, 7vw, 92px);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+  color: var(--tinta);
+}
+
+.arch-title .italic {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--brasa);
+}
+
+.arch-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: start;
+  margin-top: 80px;
+}
+
+.arch-diagram {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.arch-layer {
+  background: var(--crudo-oscuro);
+  border: 1.5px solid var(--tinta);
+  padding: 28px 32px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.arch-layer:hover {
+  background: var(--brasa);
+  color: var(--crudo);
+  transform: translateX(8px);
+}
+
+.arch-layer:hover .arch-layer-tag { color: var(--crudo); border-color: var(--crudo); }
+.arch-layer:hover .arch-layer-detail { color: var(--crudo); opacity: 0.85; }
+
+.arch-layer-tag {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--brasa);
+  border: 1px solid var(--brasa);
+  padding: 4px 10px;
+  margin-bottom: 12px;
+  transition: all 0.3s;
+}
+
+.arch-layer-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  letter-spacing: 0.03em;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.arch-layer-detail {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--pino);
+  opacity: 0.8;
+  line-height: 1.6;
+  transition: all 0.3s;
+}
+
+.arch-arrow {
+  align-self: center;
+  color: var(--brasa);
+  font-size: 24px;
+}
+
+.arch-explain h3 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 32px;
+  letter-spacing: 0.03em;
+  margin-bottom: 16px;
+  color: var(--tinta);
+}
+
+.arch-explain p {
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--pino);
+  margin-bottom: 24px;
+}
+
+.arch-explain p strong {
+  color: var(--brasa);
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .arch-grid { grid-template-columns: 1fr; gap: 40px; }
+  .arch-wrap { padding: 80px 20px; }
+}
+
+/* ================= SECCIÓN: MÓDULOS ================= */
+.modulos-wrap {
+  background: var(--pino);
+  color: var(--crudo);
+  padding: 120px 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+.modulos-wrap::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--brasa), transparent);
+}
+
+.modulos-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.modulos-title {
+  font-family: 'Fraunces', serif;
+  font-weight: 900;
+  font-size: clamp(48px, 7vw, 92px);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+}
+
+.modulos-title .italic {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--brasa-claro);
+}
+
+.modulos-list {
+  margin-top: 60px;
+  border-top: 1px solid rgba(244,239,230,0.15);
+}
+
+.modulo-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 200px 100px;
+  gap: 32px;
+  align-items: center;
+  padding: 32px 0;
+  border-bottom: 1px solid rgba(244,239,230,0.15);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.modulo-row:hover {
+  padding-left: 24px;
+  background: linear-gradient(90deg, rgba(224,78,27,0.1), transparent);
+}
+
+.modulo-row .num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  color: var(--brasa-claro);
+  letter-spacing: 0.1em;
+  opacity: 0.6;
+}
+
+.modulo-row .name {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1;
+}
+
+.modulo-row .name .italic {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--brasa-claro);
+}
+
+.modulo-row .desc {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--niebla);
+}
+
+.modulo-row .arrow {
+  text-align: right;
+  color: var(--brasa-claro);
+  transition: transform 0.3s;
+  font-size: 28px;
+}
+
+.modulo-row:hover .arrow { transform: translateX(8px); }
+
+@media (max-width: 768px) {
+  .modulo-row { grid-template-columns: 50px 1fr 30px; gap: 16px; }
+  .modulo-row .desc { display: none; }
+  .modulo-row .name { font-size: 26px; }
+}
+
+/* ================= SECCIÓN: AUTOR / CIERRE ================= */
+.cierre {
+  background: var(--crudo);
+  padding: 140px 32px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cierre::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(224,78,27,0.12), transparent 60%);
+  pointer-events: none;
+}
+
+.cierre-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.cierre-quote {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: clamp(36px, 6vw, 80px);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--tinta);
+  margin-bottom: 48px;
+}
+
+.cierre-quote .accent {
+  color: var(--brasa);
+  font-weight: 800;
+}
+
+.cierre-attribution {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--pino);
+}
+
+.cierre-attribution .line { width: 60px; height: 1px; background: var(--tinta); opacity: 0.3; }
+
+/* ================= FOOTER ================= */
+.footer {
+  background: var(--tinta);
+  color: var(--crudo);
+  padding: 60px 32px 30px;
+}
+
+.footer-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 48px;
+  margin-bottom: 48px;
+}
+
+.footer h4 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--brasa-claro);
+  margin-bottom: 20px;
+}
+
+.footer-brand .nav-name {
+  font-size: 32px;
+  color: var(--crudo);
+  margin-bottom: 16px;
+  display: inline-block;
+}
+
+.footer p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--niebla);
+}
+
+.footer ul { list-style: none; }
+.footer li { margin: 8px 0; }
+.footer a {
+  color: var(--niebla);
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.2s;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.footer a:hover { color: var(--brasa-claro); }
+
+.footer-bottom {
+  border-top: 1px solid rgba(244,239,230,0.1);
+  padding-top: 24px;
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--niebla);
+}
+
+@media (max-width: 768px) {
+  .footer-inner { grid-template-columns: 1fr; gap: 32px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ================ NAV ================ -->
+<nav class="nav">
+  <div class="nav-brand">
+    <img src="logo.png" class="nav-logo" alt="ReténDigital Logo" style="width: 44px; height: 44px;">
+    <span class="nav-name" style="font-size: 18px;">RETÉN<span class="accent">·</span>DIGITAL</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#problema">Problema</a></li>
+    <li><a href="#tech">Tecnologías</a></li>
+    <li><a href="#arquitectura">Arquitectura</a></li>
+    <li><a href="#modulos">Módulos</a></li>
+  </ul>
+  <button class="nav-cta" onclick="mostrarOpciones()">Defensa TFG →</button>
+</nav>
+
+<!-- ================ HERO ================ -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div style="display: flex; align-items: center; gap: 24px; margin-bottom: 40px; opacity: 0; animation: fadeUp 0.8s ease 0.1s forwards;">
+      <img src="logo.png" alt="ReténDigital" style="width: 120px; height: 120px; filter: drop-shadow(0 8px 24px rgba(224, 78, 27, 0.25));">
+      <div>
+        <div class="hero-meta" style="margin: 0; opacity: 1;">
+          <span class="dot"></span>
+          <span>TFG · CESUR · DAM 2025-26</span>
+          <span class="dash"></span>
+          <span>v1.0</span>
+          <span class="dash"></span>
+          <span>Android Native</span>
+        </div>
+      </div>
+    </div>
+
+    <h1 class="hero-title">
+      Del <span class="italic">campo,</span><br>
+      para el <span class="stamp">CAMPO.</span>
+    </h1>
+
+    <p class="hero-subtitle">
+      Una aplicación móvil que sustituye el papel y el WhatsApp del retén contraincendios. Ordenada, rápida, fiable — y con una promesa innegociable: <strong>funciona sin internet</strong>.
+    </p>
+
+    <div class="hero-actions">
+      <a href="#problema" class="btn-primary">
+        <span>Ver el proyecto</span>
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="position:relative;z-index:1">
+          <path d="M1 7h12m0 0L7 1m6 6l-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </a>
+      <a href="https://github.com/FernixDev/RetenDigital-Android" target="_blank" class="btn-secondary">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M7 0a7 7 0 00-2.21 13.64c.35.06.48-.15.48-.34v-1.2c-1.95.42-2.36-.94-2.36-.94-.32-.81-.78-1.03-.78-1.03-.64-.43.05-.42.05-.42.7.05 1.07.72 1.07.72.62 1.07 1.64.76 2.04.58.06-.45.24-.76.44-.93-1.55-.18-3.19-.78-3.19-3.45 0-.76.27-1.38.72-1.87-.07-.18-.31-.89.07-1.86 0 0 .59-.19 1.93.71A6.71 6.71 0 017 3.4c.6 0 1.2.08 1.76.24 1.34-.91 1.93-.71 1.93-.71.39.97.14 1.68.07 1.86.45.49.72 1.11.72 1.87 0 2.68-1.64 3.27-3.2 3.44.25.22.48.65.48 1.31v1.94c0 .19.13.41.49.34A7 7 0 007 0z" fill="currentColor"/>
+        </svg>
+        <span>Repositorio</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <span class="num">5</span>
+      <span class="label">Módulos · Pantallas</span>
+    </div>
+    <div class="hero-stat">
+      <span class="num">4</span>
+      <span class="label">Tecnologías clave</span>
+    </div>
+    <div class="hero-stat">
+      <span class="num">100%</span>
+      <span class="label">Offline · Sin red</span>
+    </div>
+    <div class="hero-stat">
+      <span class="num">1.0</span>
+      <span class="label">Versión actual</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================ PROBLEMA ================ -->
+<section class="section" id="problema">
+  <div class="section-header">
+    <span class="num">01</span>
+    <span class="label">El Problema · La Solución</span>
+    <span class="line"></span>
+  </div>
+
+  <h2 class="arch-title" style="margin-bottom: 64px;">
+    El papel <span class="italic">no funciona</span><br>
+    en una emergencia.
+  </h2>
+
+  <div class="problema-grid">
+    <div class="problema-col antes">
+      <h3>
+        <span class="small">Antes · Realidad actual</span>
+        Papel y WhatsApp
+      </h3>
+      <ul class="problema-list">
+        <li>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          <span>Información dispersa entre carpetas y archivadores físicos</span>
+        </li>
+        <li>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          <span>Búsquedas que tardan minutos cuando cuentan los segundos</span>
+        </li>
+        <li>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 9v4M12 17h.01"/><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+          <span>Inventario que casi nunca refleja la realidad del almacén</span>
+        </li>
+        <li>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          <span>Avisos críticos perdidos entre cientos de mensajes en grupos</span>
+        </li>
+        <li>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+          <span>Sin histórico digital al que volver y aprender</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="problema-col despues">
+      <h3>
+        <span class="small">Ahora · ReténDigital</span>
+        Una app, un móvil
+      </h3>
+      <ul class="problema-list">
+        <li>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          <span>Todos los datos centralizados — un solo lugar, un solo dispositivo</span>
+        </li>
+        <li>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          <span>Acceso inmediato a turnos, vehículos e inventario</span>
+        </li>
+        <li>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+          <span>Funciona sin cobertura — la BD vive en el propio móvil</span>
+        </li>
+        <li>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span>Coordenadas UTM listas para servicios de emergencia</span>
+        </li>
+        <li>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+          <span>Registro digital permanente de cada intervención</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================ TECNOLOGÍAS ================ -->
+<section class="section-tech" id="tech">
+  <div class="section-tech-inner">
+    <div class="section-header">
+      <span class="num" style="border-color:var(--brasa-claro); color:var(--brasa-claro)">02</span>
+      <span class="label">Stack Técnico</span>
+      <span class="line"></span>
+    </div>
+
+    <h2 class="tech-title">
+      Cuatro pilares.<br>
+      <span class="italic">Una app robusta.</span>
+    </h2>
+
+    <p class="tech-intro">
+      Cada librería elegida cumple un rol específico — nada por moda, todo por necesidad operativa.
+    </p>
+
+    <div class="tech-grid">
+      <!-- ROOM -->
+      <div class="tech-card">
+        <div class="tech-card-header">
+          <div class="tech-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#E04E1B" stroke-width="1.8">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M3 5v14a9 3 0 0 0 18 0V5"/>
+              <path d="M3 12a9 3 0 0 0 18 0"/>
+            </svg>
+          </div>
+          <span class="tech-num">01 / 04</span>
+        </div>
+        <div class="tech-name">ROOM</div>
+        <div class="tech-tagline">Persistencia local · SQLite</div>
+        <p class="tech-desc">
+          Base de datos embebida en el dispositivo. Capa de abstracción sobre SQLite que permite trabajar con clases Java en lugar de SQL puro. Validación de consultas en tiempo de compilación.
+        </p>
+        <div class="tech-meta">
+          <span>v 2.6.1</span>
+          <span>· Offline-first</span>
+        </div>
+      </div>
+
+      <!-- HILT -->
+      <div class="tech-card">
+        <div class="tech-card-header">
+          <div class="tech-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#E04E1B" stroke-width="1.8">
+              <circle cx="12" cy="12" r="2"/>
+              <circle cx="12" cy="3" r="1.5"/>
+              <circle cx="21" cy="12" r="1.5"/>
+              <circle cx="12" cy="21" r="1.5"/>
+              <circle cx="3" cy="12" r="1.5"/>
+              <line x1="12" y1="5" x2="12" y2="10"/>
+              <line x1="19" y1="12" x2="14" y2="12"/>
+              <line x1="12" y1="19" x2="12" y2="14"/>
+              <line x1="5" y1="12" x2="10" y2="12"/>
+            </svg>
+          </div>
+          <span class="tech-num">02 / 04</span>
+        </div>
+        <div class="tech-name">HILT</div>
+        <div class="tech-tagline">Inyección de dependencias</div>
+        <p class="tech-desc">
+          Construido sobre Dagger 2. Resuelve y conecta automáticamente las clases del proyecto. Garantiza que la base de datos sea Singleton — una única instancia para toda la app.
+        </p>
+        <div class="tech-meta">
+          <span>v 2.51.1</span>
+          <span>· @HiltAndroidApp</span>
+        </div>
+      </div>
+
+      <!-- ROOM -->
+      <div class="tech-card">
+        <div class="tech-card-header">
+          <div class="tech-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#E04E1B" stroke-width="1.8">
+              <path d="M2 12h20"/>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+              <circle cx="12" cy="12" r="10"/>
+            </svg>
+          </div>
+          <span class="tech-num">03 / 04</span>
+        </div>
+        <div class="tech-name">RETROFIT</div>
+        <div class="tech-tagline">Cliente HTTP · APIs REST</div>
+        <p class="tech-desc">
+          Preparado para futuras integraciones — consulta de datos meteorológicos en tiempo real (Open-Meteo) sobre la zona de intervención, sincronización con servidor central en versiones siguientes.
+        </p>
+        <div class="tech-meta">
+          <span>v 2.9.0</span>
+          <span>· Roadmap v1.1</span>
+        </div>
+      </div>
+
+      <!-- MAPS -->
+      <div class="tech-card">
+        <div class="tech-card-header">
+          <div class="tech-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#E04E1B" stroke-width="1.8">
+              <path d="M12 2a8 8 0 0 0-8 8c0 5.4 8 12 8 12s8-6.6 8-12a8 8 0 0 0-8-8z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+          </div>
+          <span class="tech-num">04 / 04</span>
+        </div>
+        <div class="tech-name">MAPS · GPS</div>
+        <div class="tech-tagline">Geolocalización · UTM</div>
+        <p class="tech-desc">
+          Google Maps SDK con vista satélite optimizada para identificación de zonas forestales. Sistema UTM Huso 30T — el formato estándar usado por servicios de emergencia en Aragón.
+        </p>
+        <div class="tech-meta">
+          <span>v 18.1.0</span>
+          <span>· Huso 30T</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================ ARQUITECTURA ================ -->
+<section class="arch-wrap" id="arquitectura">
+  <div class="arch-inner">
+    <div class="section-header">
+      <span class="num">03</span>
+      <span class="label">Arquitectura · Patrón MVVM</span>
+      <span class="line"></span>
+    </div>
+
+    <h2 class="arch-title">
+      Tres capas.<br>
+      <span class="italic">Cero acoplamiento.</span>
+    </h2>
+
+    <div class="arch-grid">
+      <div class="arch-diagram">
+        <div class="arch-layer">
+          <div class="arch-layer-tag">CAPA 01 · UI</div>
+          <div class="arch-layer-name">VISTA</div>
+          <div class="arch-layer-detail">Activities + XML Layouts<br>MainActivity · MenuPrincipal · etc.</div>
+        </div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-layer">
+          <div class="arch-layer-tag">CAPA 02 · LOGIC</div>
+          <div class="arch-layer-name">LÓGICA</div>
+          <div class="arch-layer-detail">Procesado de eventos · Preparación de datos<br>onClick · onCreate · onMapReady</div>
+        </div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-layer">
+          <div class="arch-layer-tag">CAPA 03 · DATA</div>
+          <div class="arch-layer-name">DATOS</div>
+          <div class="arch-layer-detail">VehiculoRepository · DAO · AppDatabase<br>Room SQLite + ExecutorService</div>
+        </div>
+      </div>
+
+      <div class="arch-explain">
+        <h3>¿Por qué tres capas?</h3>
+        <p>
+          La <strong>separación de responsabilidades</strong> es la clave para que el código pueda crecer sin convertirse en un caos. Cada capa tiene un trabajo, y solo uno.
+        </p>
+        <p>
+          Si mañana se cambia el diseño visual, solo se toca la <strong>Vista</strong>. Si se sustituye SQLite por un servidor en la nube, solo se modifica la capa de <strong>Datos</strong>. La Lógica permanece intacta.
+        </p>
+        <p>
+          El <strong>Repository</strong> actúa como guardián entre la Lógica y los Datos: las pantallas nunca acceden directamente a la base de datos. Pasan siempre por él.
+        </p>
+        <p>
+          Esta estructura es la base recomendada por Google para apps Android de calidad profesional.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================ MÓDULOS ================ -->
+<section class="modulos-wrap" id="modulos">
+  <div class="modulos-inner">
+    <div class="section-header">
+      <span class="num" style="border-color:var(--brasa-claro); color:var(--brasa-claro)">04</span>
+      <span class="label" style="color:var(--niebla)">Funcionalidad · Cinco Módulos</span>
+      <span class="line"></span>
+    </div>
+
+    <h2 class="modulos-title">
+      Cinco pantallas,<br>
+      <span class="italic">una operativa completa.</span>
+    </h2>
+
+    <div class="modulos-list">
+      <div class="modulo-row">
+        <div class="num">[01]</div>
+        <div class="name">Login <span class="italic">— Iniciar Turno</span></div>
+        <div class="desc">Punto de entrada</div>
+        <div class="arrow">→</div>
+      </div>
+      <div class="modulo-row">
+        <div class="num">[02]</div>
+        <div class="name">Cuadrante <span class="italic">— Calendario</span></div>
+        <div class="desc">Servicio · Alerta · Descanso</div>
+        <div class="arrow">→</div>
+      </div>
+      <div class="modulo-row">
+        <div class="num">[03]</div>
+        <div class="name">Flota <span class="italic">— Vehículos</span></div>
+        <div class="desc">Estado operativo</div>
+        <div class="arrow">→</div>
+      </div>
+      <div class="modulo-row">
+        <div class="num">[04]</div>
+        <div class="name">Inventario <span class="italic">— Material</span></div>
+        <div class="desc">Disponibilidad en tiempo real</div>
+        <div class="arrow">→</div>
+      </div>
+      <div class="modulo-row">
+        <div class="num">[05]</div>
+        <div class="name">Intervención <span class="italic">— GPS · UTM</span></div>
+        <div class="desc">Mapa satélite + coordenadas</div>
+        <div class="arrow">→</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================ CIERRE ================ -->
+<section class="cierre" id="cierre">
+  <div class="cierre-inner">
+    <div class="section-header" style="justify-content:center">
+      <span class="num">05</span>
+      <span class="label">Lema del proyecto</span>
+      <span class="line" style="max-width:100px"></span>
+    </div>
+
+    <p class="cierre-quote">
+      "ReténDigital nace<br>
+      <span class="accent">del campo,</span><br>
+      para el campo."
+    </p>
+
+    <div class="cierre-attribution">
+      <span class="line"></span>
+      <span>Alejandro Fernández Morales · DAM 2025-26</span>
+      <span class="line"></span>
+    </div>
+  </div>
+</section>
+
+<!-- ================ FOOTER ================ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+        <img src="logo.png" alt="ReténDigital" style="width: 50px; height: 50px;">
+        <span class="nav-name" style="font-size: 24px; margin: 0;">RETÉN<span style="color:var(--brasa-claro)">·</span>DIGITAL</span>
+      </div>
+      <p>Aplicación Android nativa para la gestión operativa de retenes contraincendios. Proyecto de Fin de Grado · DAM · CESUR · Curso 2025-2026.</p>
+    </div>
+    <div>
+      <h4>Recursos</h4>
+      <ul>
+        <li><a href="https://github.com/FernixDev/RetenDigital-Android" target="_blank">GitHub →</a></li>
+        <li><a href="https://youtu.be/v9KAPA4B3sI" target="_blank">Vídeo Demo →</a></li>
+        <li><a href="#">Manual de Usuario →</a></li>
+        <li><a href="#">Memoria del proyecto →</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Stack</h4>
+      <ul>
+        <li>Android Native · Java</li>
+        <li>Room · SQLite</li>
+        <li>Hilt · Dagger</li>
+        <li>Google Maps SDK</li>
+        <li>Retrofit2</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    © 2026 · Alejandro Fernández Morales · Hecho con persistencia desde el monte.
+  </div>
+</footer>
+
+  <div id="modalPDFs" class="modal-overlay" onclick="cerrarModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <h3 style="font-family:'Bebas Neue';font-size:32px;color:var(--tinta);margin-bottom:24px;">Documentos de Defensa</h3>
+      <div style="display:flex;gap:16px;flex-direction:column;">
+        <a href="Guion_Defensa_TFG_RetenDigital.pdf" class="btn-primary" style="text-align:center;justify-content:center;">
+          <span>📄 Guion de Defensa (10 min)</span>
+        </a>
+        <a href="RetenDigital_Explicacion_Profunda.pdf" class="btn-primary" style="text-align:center;justify-content:center;">
+          <span>📚 Explicación Profunda (20 páginas)</span>
+        </a>
+        <button onclick="cerrarModal()" class="btn-secondary" style="text-align:center;justify-content:center;">
+          <span>Cerrar</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(20, 17, 13, 0.7);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--crudo);
+      padding: 48px 40px;
+      border-radius: 8px;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(20, 17, 13, 0.4);
+      border: 2px solid var(--brasa);
+    }
+
+    .modal-content a, .modal-content button {
+      display: block !important;
+    }
+  </style>
+
+  <script>
+    function mostrarOpciones() {
+      document.getElementById('modalPDFs').classList.add('active');
+    }
+
+    function cerrarModal(event) {
+      if (event && event.target.id !== 'modalPDFs') return;
+      document.getElementById('modalPDFs').classList.remove('active');
+    }
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') cerrarModal();
+    });
+  </script>
